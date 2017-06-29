@@ -40,6 +40,43 @@ $.ajax({
 </code></pre>
 
 
+
+<pre><code class="shell">
+# 整站下载
+wget -p -np -k  http://www.jd.com	
+
+# 从文件获取下载url
+wget -p -np -k  -i input_url.txt
+</code></pre>
+
+
+
+
+<pre><code class="shell">
+server {
+    listen       80;
+    server_name  localhost;
+
+    #charset koi8-r;
+    #access_log  /var/log/nginx/log/host.access.log  main;
+
+    location / {
+       proxy_pass http://127.0.0.1:8080;
+       index index.html index.htm;
+    }
+
+    location /v1 {
+        #deny all;
+        #allow 127.0.0.1;
+        proxy_pass http://127.0.0.1:9090;
+        index  index.php index.html index.htm;
+    }
+}
+</code></pre>
+
+
+
+
 <link rel="stylesheet" href="highlight/styles/default.css">
 <script src="highlight/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
