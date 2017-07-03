@@ -76,6 +76,16 @@ server {
 
 
 
+<pre><code class="shell">
+import com.alibaba.fastjson.TypeReference;
+
+List<VO> list = JSON.parseObject("...", new TypeReference<List<VO>>() {});
+</code></pre>
+
+
+
+
+
 
 <link rel="stylesheet" href="highlight/styles/default.css">
 <script src="highlight/highlight.pack.js"></script>
