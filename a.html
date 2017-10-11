@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+	<textarea id="input_params" style="width: 600px; height: 500px;"></textarea>
+
+	<textarea id="output_params" style="width: 600px; height: 500px;"></textarea>
+
+<script type="text/javascript">
+	
+	function calc(){
+		var input_params = document.getElementById('input_params').value;
+		var arr = input_params.split('&');
+
+		var keyArr = {};
+		for (var i = 0; i < arr.length; i++) {
+			var item = arr[i];
+			var p_arr = item.split('=');
+			keyArr[p_arr[0]] = p_arr[1];
+		}
+		var allKey = Object.keys(keyArr);
+		allKey.sort();
+
+		var url  = [];
+		for (var i = 0; i < allKey.length; i++) {
+			var key = allKey[i]; 
+			url.push(key);
+			url.push('=');
+			url.push(keyArr[key]);
+			if(i < allKey.length -1) url.push('&');
+		}
+		document.getElementById('output_params').value = url.join('');
+	}
+
+
+	
+
+</script>
+
+</body>
+</html>
