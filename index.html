@@ -83,6 +83,79 @@ List<VO> list = JSON.parseObject("...", new TypeReference<List<VO>>() {});
 </code></pre>
 
 
+<pre><code class="shell">
+
+git config --global user.name "username"
+git config --global user.email "email@email.com"
+
+
+mkdir pc-battery2
+cd pc-battery2
+git init
+touch README.md
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github/xxx.git
+git push -u origin master
+
+
+cd existing_git_repo
+git remote add origin https://github/xxx.git
+git push -u origin master
+
+</code></pre>
+
+
+<pre><code class="shell">
+
+GRANT ALL PRIVILEGES ON *.* TO root@"%" identified by "123456"; 
+
+alter user 'root'@'localhost' identified by '123456';
+
+</code></pre>
+
+
+
+
+<pre><code class="shell">
+
+#本地转发  remote 9090 to local 9090
+ssh -L 9090:remote-secret.com:8080 my-remote-host.com
+
+#远程转发 local 9090 to remote 8080
+ssh -R 9090:local-secret.com:8080 my-remote-host.com
+
+#允许外部访问
+sshd_config  GatewayPorts:true
+
+#动态转发
+ssh -D 9090 my-remote-host.com
+
+</code></pre>
+
+
+
+<pre><code class="java">
+
+if( Pattern.matches(".*@.*", text) ){
+    return "match!";
+}
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
