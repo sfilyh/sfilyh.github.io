@@ -96,12 +96,9 @@ touch README.md
 git add README.md
 git commit -m "first commit"
 git remote add origin https://github/xxx.git
-git push -u origin master
-
-
-cd existing_git_repo
-git remote add origin https://github/xxx.git
-git push -u origin master
+git branch --set-upstream-to=origin/master
+git pull --allow-unrelated-histories
+git push
 
 </code></pre>
 
@@ -149,18 +146,9 @@ if( Pattern.matches(".*@.*", text) ){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+<pre><code class="shell">
+character-set-server=utf8mb4s
+</code></pre>
 
 
 
