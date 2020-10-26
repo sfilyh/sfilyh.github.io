@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<style type="text/css">
+	.input-area { 
+		width: 800px;
+		height: 200px;
+	}
+</style>
+<body>
+
+<h3>input:mysql sql</h3>
+<textarea id="input" class="input-area">select id, name ,en_name,image from resource_product limit 0,100;</textarea>
+
+<h3>redis key</h3>
+<p>eg: concat('user:',id)</p>
+<input type="text" name="" id="key" value="concat('product:',id)">
+
+<div style="padding: 20px;">
+	<button onclick="start();" style="width: 100px; height: 60px;"> start</button>	
+</div>
+
+
+<h3>out: mysql_to_redis.sql</h3>
+<textarea id="out" class="input-area"></textarea>
+
+
+
+
+
+<h3>example: use mysql_to_redis.sql </h3>
+<textarea class="input-area">mysql -h <MySQL host> -P <MySQL port> -u <MySQL username> -D <MySQL database name> -p --skip-column-names --raw < mysql_to_redis.sql | redis-cli -h <Redis host> --pipe -a <Redis password>
+</textarea>
+ss
+
+
+<script type="text/javascript">
+
+	var wordArr = [];
+	var wordList = [];
+
+	var breakWord = ' ';
+	var breakPause = null;
+	var breakResume = null;
+
+	var sqlEnd = '';
+	
+	function process(){
+
+		wordArr = [];
+		wordList = [];
+
+		breakWord = ' ';
+		breakPause = null;
+		breakResume = null;
+
+		sqlEnd = '';
+
+		var sql = document.getElementById('input').value.replace(/ +/g,' ');
+	
+		
+		
+
+		for(var i = 0 ; i < sql.length ;i++){ 
+			var item = sql.charAt(i);
+
+			if(item == '('){
+				if(breakPause == null){
+					breakPause = {char:'(',count:1,beforBreakWord:breakWord};	
+					breakResume = {char:')',count:1}
+					breakWord = '----';
+				}else{
+					breakPause.count = breakPause.count + 1; 
+				} 
+			}
+
+			if(item == ')'){
+				if(breakResume.count == breakPause.count){
+					breakWord = breakPause.beforBreakWord;
+				}else{
+					breakResume.count = breakResume.count + 1;
+				}
+			}
+
+
+			if(item == breakWord){
+				wordList.push(wordArr.join(''));
+				wordArr = [];
+
+				if(breakWord == ' '){
+					breakWord = ',';
+				}
+
+				breakPause = null;
+				breakResume = null;
+			}else{
+				wordArr.push(item);
+			}
+
+			if(breakPause == null && breakResume == null &&  wordArr.join('').indexOf(' from ') > 0){
+				wordList.push(wordArr.join('').replace(' from ',''));
+				wordArr = [];
+				sqlEnd = sql.substr(i - 5);
+				break;				
+			}
+		}
+	}
+
+	
+
+	var commandList = [];
+	function to_redis_proto(){
+		commandList = [];
+		
+		commandList.push('SELECT CONCAT(' + "^new_line");
+
+		commandList.push("'" + '*'+ ((wordList.length - 1) * 2 + 2) +"\\r\\n" + "'");
+		commandList.push("^new_line");
+
+		commandList.push("'$'");
+		commandList.push("LENGTH('HMSET')");
+		commandList.push("'\\r\\n'");
+		commandList.push("^new_line");
+
+		commandList.push("'HMSET'");
+		commandList.push("'\\r\\n'");
+		commandList.push("^new_line");
+
+		commandList.push("'$'");
+		commandList.push("LENGTH("+ document.getElementById('key').value +")");
+		commandList.push("'\\r\\n'");
+		commandList.push("^new_line");
+		
+		commandList.push(document.getElementById('key').value);
+		commandList.push("'\\r\\n'");
+		commandList.push("^new_line");		
+
+
+		for (var i = 0; i < wordList.length; i++) {
+			var item = wordList[i];
+			if(item == 'select') continue;
+
+			// filed number
+			commandList.push("'$'");
+			commandList.push("LENGTH('"+item.trim()+"')");
+			commandList.push("'\\r\\n'");
+			commandList.push("^new_line");
+
+			// filed value
+			commandList.push("'"+item.trim()+"'");
+			commandList.push("'\\r\\n'");
+			commandList.push("^new_line");
+
+			// value number
+			commandList.push("'$'");
+			commandList.push("LENGTH("+item.trim()+")");
+			commandList.push("'\\r\\n'");
+			commandList.push("^new_line");
+
+			// value value
+			commandList.push(item.trim());
+			commandList.push("'\\r\\n'");
+			commandList.push("^new_line");
+
+		}
+
+		commandList.push('\'\')^new_line');
+		commandList.push(sqlEnd);
+
+		var outSql =  commandList.join(',').replace(/\^new_line,/g,'\n');
+		document.getElementById('out').value = outSql;
+	}
+
+	
+	
+
+	function start(){
+	    process();
+	    to_redis_proto();
+	}
+</script>
+
+
+</body>
+</html>
