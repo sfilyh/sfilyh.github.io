@@ -1,3 +1,7 @@
+/**
+ 获取京牌法拍结果
+**/
+
 function getDetail(id,title,bjNumber){
 	$.ajax({
 	    type: "get",
@@ -9,7 +13,6 @@ function getDetail(id,title,bjNumber){
 	        var div = document.createElement('div');
 	        div.innerHTML = rsp;
 
-	       
 	        var price = $('.fs18:first',div).text();
 	        var buyPrice = $('.fs18:last',div).text();
 
@@ -28,12 +31,14 @@ function getDetail(id,title,bjNumber){
 	        rList.push(count.trim());
 	        rList.push(time.trim());
 
+	        // 输出结果
 	        console.log(rList.join('^'));
 	    }
 	});
 }
 
 function get(page){
+	// 640 批次号
 	$.ajax({
 	    type: "get",
 	    async: false, 
@@ -43,9 +48,6 @@ function get(page){
 	        
 	        var ul = document.createElement('ul');
 	        ul.innerHTML = rsp;
-
-	        console.log(ul);
-	        console.log($(ul).find('li').size());
 
 	        $(ul).find('li').each(function(){
 	        	var xmid = $(this).data('xmid');
