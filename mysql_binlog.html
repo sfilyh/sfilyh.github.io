@@ -18,6 +18,14 @@ mysqlbinlog -v /var/lib/mysql/mysql-bin.000521 > ~/2.log
 </code></pre>
 
 
+<h3>mysql抓包</h3>
+<pre><code class="code">
+tcpdump  -s 0 -l -w - dst  port 3306 | strings
+</code></pre>
+
+
+
+
 
 <link rel="stylesheet" href="highlight/styles/default.css">
 <script src="highlight/highlight.pack.js"></script>
