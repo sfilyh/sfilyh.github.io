@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SQL Generator</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function generateSql() {
+            var inputSql = $('#sqlInput').val();
+            var outputSql = '';
+            for (var i = 0; i < 32; i++) {
+                var tableSql = inputSql.replace(/@/g, i);
+                outputSql += tableSql ;
+                if (i < 31) {
+                    outputSql += ' UNION ALL ';
+                }
+            }
+            $('#sqlOutput').text(outputSql);
+        }
+    </script>
+</head>
+<body>
+    <h1>SQL Generator</h1>
+
+    <div>select count(1) from user@ where id = 1</div>
+    <label for="sqlInput">Enter your SQL:</label><br>
+    <textarea id="sqlInput" rows="4" cols="50" >select count(1) from user@ where id = 1</textarea><br>
+    <button onclick="generateSql()">Generate SQL</button>
+    <h2>Output SQL:</h2>
+    <textarea id="sqlOutput" rows="10" cols="50" readonly></textarea>
+</body>
+</html>
